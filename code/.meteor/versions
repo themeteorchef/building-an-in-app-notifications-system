@@ -95,6 +95,7 @@ templating-runtime@1.3.2
 templating-tools@1.1.2
 themeteorchef:bert@2.1.3
 tmeasday:check-npm-versions@0.3.1
+tmeasday:publish-counts@0.8.0
 tracker@1.1.3
 twbs:bootstrap@3.3.6
 underscore@1.0.10

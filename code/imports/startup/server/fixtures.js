@@ -1,6 +1,7 @@
 import seeder from '@cleverbeagle/seeder';
 import { Meteor } from 'meteor/meteor';
 import Documents from '../../api/Documents/Documents';
+import Notifications from '../../api/Notifications/Notifications';
 
 const documentsSeed = userId => ({
   collection: Documents,
@@ -49,6 +50,27 @@ seeder(Meteor.users, {
       data(userId) {
         return documentsSeed(userId);
       },
+    };
+  },
+});
+
+seeder(Notifications, {
+  noLimit: false,
+  environments: ['development', 'staging'],
+  modelCount: 500,
+  model(index) {
+    const recipient = Meteor.users.findOne({ 'emails.address': 'admin@admin.com' });
+    const exampleDocument = Documents.findOne({ owner: recipient._id });
+    return {
+      recipient: recipient._id,
+      message: `<strong>${recipient.profile.name.first} ${recipient.profile.name.last}</strong> did something #${index}`,
+      date: (new Date()).toISOString(),
+      read: false,
+      icon: {
+        symbol: 'flag',
+        background: '#4285F4',
+      },
+      action: `/documents/${exampleDocument._id}`,
     };
   },
 });

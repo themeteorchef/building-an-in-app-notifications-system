@@ -1,0 +1,107 @@
+@import '../../stylesheets/colors';
+@import '../../stylesheets/flexbox';
+
+.Notifications {
+
+  .page-header h4 {
+    margin-top: 0;
+  }
+
+  .page-header .Notifications__mark-all-as-read {
+    background: none;
+    padding: 0;
+    color: $primary;
+    font-size: 14px;
+    line-height: 19px;
+    border: none;
+
+    &:hover {
+      color: #23527c;
+      text-decoration: underline;
+    }
+  }
+
+  .Notifications__container {
+    margin: 20px 0;
+  }
+
+  .Notifications__container .Loading {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .Notifications__notification {
+    padding: 15px;
+    position: relative;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $gray-lighter;
+    }
+
+    a {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      text-indent: -9999px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: $gray-lighter;
+    }
+
+    &.unread {
+      background: lighten($info, 35%);
+    }
+  }
+
+  .Notifications__notification-icon {
+    float: left;
+    width: 40px;
+    height: 40px;
+    background: $success;
+    border-radius: 3px;
+    margin-right: 15px;
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(center);
+
+    i {
+      color: #fff;
+      font-size: 18px;
+    }
+  }
+
+  .Notifications__notification-body {
+    float: left;
+    width: calc(100% - 65px);
+
+    .Notifications__notification-body-message,
+    .Notifications__notification-body-timestamp {
+      font-size: 13px;
+    }
+
+    .Notifications__notification-body-message {
+      margin-bottom: 3px;
+    }
+
+    .Notifications__notification-body-timestamp {
+      margin-bottom: 0;
+      opacity: 0.5;
+    }
+
+    .Notifications__notification-body-timestamp .IconButton {
+      float: right;
+      position: relative;
+      top: -1px;
+    }
+  }
+}

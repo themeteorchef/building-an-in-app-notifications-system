@@ -44,6 +44,15 @@ Documents.schema = new SimpleSchema({
     type: String,
     label: 'The body of the document.',
   },
+  favorites: {
+    type: Array,
+    label: 'Users who have favorited this document.',
+    defaultValue: [],
+  },
+  'favorites.$': {
+    type: String,
+    label: 'A user who has favorited this document.',
+  },
 });
 
 Documents.attachSchema(Documents.schema);

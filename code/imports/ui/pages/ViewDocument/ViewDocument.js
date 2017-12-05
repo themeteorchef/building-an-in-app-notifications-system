@@ -21,12 +21,21 @@ const handleRemove = (documentId, history) => {
   }
 };
 
-const renderDocument = (doc, match, history) => (doc ? (
+const handleFavorite = (documentId) => {
+  Meteor.call('documents.favorite', documentId, (error) => {
+    if (error) {
+      Bert.alert(error.reason, 'danger');
+    }
+  });
+};
+
+const renderDocument = (doc, hasFavorited, match, history) => (doc ? (
   <div className="ViewDocument">
     <div className="page-header clearfix">
       <h4 className="pull-left">{ doc && doc.title }</h4>
       <ButtonToolbar className="pull-right">
         <ButtonGroup bsSize="small">
+          <Button onClick={() => handleFavorite(doc._id)}><i className={`fa fa-heart ${hasFavorited ? 'text-danger' : ''}`} /></Button>
           <Button onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>
           <Button onClick={() => handleRemove(doc._id, history)} className="text-danger">
             Delete
@@ -39,9 +48,9 @@ const renderDocument = (doc, match, history) => (doc ? (
 ) : <NotFound />);
 
 const ViewDocument = ({
-  loading, doc, match, history,
+  loading, doc, hasFavorited, match, history,
 }) => (
-  !loading ? renderDocument(doc, match, history) : <Loading />
+  !loading ? renderDocument(doc, hasFavorited, match, history) : <Loading />
 );
 
 ViewDocument.defaultProps = {
@@ -62,5 +71,6 @@ export default withTracker(({ match }) => {
   return {
     loading: !subscription.ready(),
     doc: Documents.findOne(documentId),
+    hasFavorited: !!Documents.findOne({ _id: documentId, favorites: { $in: [Meteor.userId()] } }),
   };
 })(ViewDocument);

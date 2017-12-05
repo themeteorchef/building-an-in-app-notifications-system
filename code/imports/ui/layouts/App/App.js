@@ -7,6 +7,7 @@ import { Grid } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Roles } from 'meteor/alanning:roles';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import Navigation from '../../components/Navigation/Navigation';
 import Authenticated from '../../components/Authenticated/Authenticated';
 import Public from '../../components/Public/Public';
@@ -22,6 +23,7 @@ import VerifyEmail from '../../pages/VerifyEmail/VerifyEmail';
 import RecoverPassword from '../../pages/RecoverPassword/RecoverPassword';
 import ResetPassword from '../../pages/ResetPassword/ResetPassword';
 import Profile from '../../pages/Profile/Profile';
+import Notifications from '../../pages/Notifications/Notifications';
 import NotFound from '../../pages/NotFound/NotFound';
 import Footer from '../../components/Footer/Footer';
 import Terms from '../../pages/Terms/Terms';
@@ -52,6 +54,7 @@ const App = props => (
             <Authenticated exact path="/documents/:_id" component={ViewDocument} {...props} />
             <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...props} />
             <Authenticated exact path="/profile" component={Profile} {...props} />
+            <Authenticated exact path="/notifications" component={Notifications} {...props} />
             <Public path="/signup" component={Signup} {...props} />
             <Public path="/login" component={Login} {...props} />
             <Route path="/logout" component={Logout} {...props} />
@@ -84,10 +87,11 @@ App.propTypes = {
 };
 
 export default withTracker(() => {
+  const subscription = Meteor.subscribe('app');
   const loggingIn = Meteor.loggingIn();
   const user = Meteor.user();
   const userId = Meteor.userId();
-  const loading = !Roles.subscription.ready();
+  const loading = !Roles.subscription.ready() && !subscription.ready();
   const name = user && user.profile && user.profile.name && getUserName(user.profile.name);
   const emailAddress = user && user.emails && user.emails[0].address;
 
@@ -100,5 +104,6 @@ export default withTracker(() => {
     userId,
     emailAddress,
     emailVerified: user && user.emails ? user && user.emails && user.emails[0].verified : true,
+    unreadNotifications: Counts.get('app.unreadNotifications'),
   };
 })(App);
