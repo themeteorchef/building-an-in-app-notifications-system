@@ -1,6 +1,6 @@
 #### Tutorial: Building an In-App Notifications System
 
-Description of this tutorial goes here. Used in your tutorial repo's README.md file.
+In this tutorial, we'll learn how to create an in-app notifications system. We'll focus on adding a favorites feature to Documents in our app that triggers a notification to users whenever on of their documents are favorited.
 
 [Read this tutorial on The Meteor Chef](https://themeteorchef.com/tutorials/building-an-in-app-notifications-system)  
 
