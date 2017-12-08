@@ -19,8 +19,7 @@ class Notifications extends React.Component {
     super(props);
     this.state = { loading: true, currentPage: 1, notifications: [] };
     this.fetchNotifications = this.fetchNotifications.bind(this);
-    this.handleMarkAsUnread = this.handleMarkAsUnread.bind(this);
-    this.handleMarkAsRead = this.handleMarkAsRead.bind(this);
+    this.handleMarkNotifications = this.handleMarkNotifications.bind(this);
   }
 
   componentDidMount() {
@@ -53,24 +52,13 @@ class Notifications extends React.Component {
     }, 500);
   }
 
-  handleMarkAsUnread(items, event) {
+  handleMarkNotifications(items, markAsRead, event) {
     if (event) event.preventDefault();
-    Meteor.call('notifications.markUnread', items, (error) => {
+    Meteor.call('notifications.mark', items, markAsRead, (error) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
-        this.fetchNotifications(this.state.currentPage - 1);
-      }
-    });
-  }
-
-  handleMarkAsRead(items, event) {
-    if (event) event.preventDefault();
-    Meteor.call('notifications.markRead', items, (error) => {
-      if (error) {
-        Bert.alert(error.reason, 'danger');
-      } else {
-        this.fetchNotifications(this.state.currentPage - 1);
+        this.fetchNotifications(this.state.currentPage);
       }
     });
   }
@@ -84,7 +72,7 @@ class Notifications extends React.Component {
           <button
             href="#"
             className="Notifications__mark-all-as-read pull-right"
-            onClick={event => this.handleMarkAsRead('all', event)}
+            onClick={event => this.handleMarkNotifications('all', true, event)}
           >
             Mark All as Read
           </button>
@@ -99,7 +87,7 @@ class Notifications extends React.Component {
                   className="Notifications__notification-action"
                   to={action}
                   onClick={(event) => {
-                    this.handleMarkAsRead([_id]);
+                    this.handleMarkNotifications([_id], true);
                     onSetShow(event);
                   }}
                 >
@@ -114,11 +102,11 @@ class Notifications extends React.Component {
                     {timeago(date)}
                     {read ?
                       <IconButton
-                        onClick={event => this.handleMarkAsUnread([_id], event)}
+                        onClick={event => this.handleMarkNotifications([_id], false, event)}
                         icon="check-circle-o"
                       /> :
                       <IconButton
-                        onClick={event => this.handleMarkAsRead([_id], event)}
+                        onClick={event => this.handleMarkNotifications([_id], true, event)}
                         icon="circle-o"
                       />}
                   </span>

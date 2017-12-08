@@ -60,15 +60,16 @@ seeder(Notifications, {
   modelCount: 500,
   model(index) {
     const recipient = Meteor.users.findOne({ 'emails.address': 'admin@admin.com' });
+    const sender = Meteor.users.findOne({ 'emails.address': { $ne: 'admin@admin.com' } });
     const exampleDocument = Documents.findOne({ owner: recipient._id });
     return {
       recipient: recipient._id,
-      message: `<strong>${recipient.profile.name.first} ${recipient.profile.name.last}</strong> did something #${index}`,
+      message: `<strong>${sender.profile.name.first} ${sender.profile.name.last}</strong> favorited ${exampleDocument.title}.`,
       date: (new Date()).toISOString(),
       read: false,
       icon: {
-        symbol: 'flag',
-        background: '#4285F4',
+        symbol: 'heart',
+        background: '#DA5847',
       },
       action: `/documents/${exampleDocument._id}`,
     };

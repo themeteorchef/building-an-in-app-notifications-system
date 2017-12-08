@@ -68,7 +68,7 @@ class AuthenticatedNavigation extends React.Component {
                 </span>
               </NavItem>
             </LinkContainer>
-            {this.state.showNotifications ? <Notifications showViewAll history={history} onSetShow={this.handleShowNotifications} /> : ''}
+            {this.state.showNotifications ? <Notifications showViewAll onSetShow={this.handleShowNotifications} /> : ''}
           </span>
           <NavDropdown eventKey={4} title={name} id="user-nav-dropdown">
             <LinkContainer to="/profile">

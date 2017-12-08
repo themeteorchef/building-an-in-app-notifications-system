@@ -17,39 +17,15 @@ Meteor.methods({
       throw new Meteor.Error('500', exception);
     }
   },
-  'notifications.markRead': function notificationsMarkRead(notifications) {
+  'notifications.mark': function notificationsMarkRead(notifications, markAsRead) {
     check(notifications, Match.OneOf([String], String));
+    check(markAsRead, Boolean);
+
     try {
-      const query = {};
-
-      if (typeof notifications !== 'string') {
-        const notificationsToMark = _.reject(notifications, notification => (
-          !Notifications.findOne({ _id: notification, recipient: this.userId })
-        ));
-
-        query._id = { $in: notificationsToMark };
-      }
-
+      const query = notifications === 'all' ? { recipient: this.userId } : { _id: { $in: notifications }, recipient: this.userId };
       return Notifications.update(
         query,
-        { $set: { read: true } },
-        { multi: true },
-      );
-    } catch (exception) {
-      throw new Meteor.Error('500', exception);
-    }
-  },
-  'notifications.markUnread': function notificationsMarkUnread(notifications) {
-    check(notifications, [String]);
-
-    try {
-      const notificationsToMark = _.reject(notifications, (notification) => {
-        return !Notifications.findOne({ _id: notification, recipient: this.userId });
-      });
-
-      return Notifications.update(
-        { _id: { $in: notificationsToMark } },
-        { $set: { read: false } },
+        { $set: { read: markAsRead } },
         { multi: true },
       );
     } catch (exception) {
@@ -61,8 +37,7 @@ Meteor.methods({
 rateLimit({
   methods: [
     'notifications.fetch',
-    'notifications.markRead',
-    'notifications.markUnread',
+    'notifications.mark',
   ],
   limit: 100,
   timeRange: 1000,

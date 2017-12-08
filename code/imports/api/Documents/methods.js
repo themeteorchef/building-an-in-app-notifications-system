@@ -73,6 +73,7 @@ rateLimit({
     'documents.insert',
     'documents.update',
     'documents.remove',
+    'documents.favorite',
   ],
   limit: 5,
   timeRange: 1000,
